@@ -1,8 +1,24 @@
     const canvas = document.querySelector('canvas')
     const c = canvas.getContext('2d')
 
-    canvas.width = 1024
-    canvas.height = 576
+    canvas.width = innerWidth
+    canvas.height = innerHeight
 
-    c.fillStyle = 'white'
-    c.fillRect(0, 0, canvas.width, canvas.height)
+    class Player {
+        constructor() {
+            this.position = {
+                x: 100,
+                y: 100
+            }
+            this.width = 30
+            this.height = 30
+        }
+
+        draw() {
+
+            c.fillRect(this.position.x, this.position.y, this.width, this.height)
+        }
+    }
+
+    const player = new Player()
+    player.draw()  
