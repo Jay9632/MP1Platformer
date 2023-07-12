@@ -1,8 +1,10 @@
-    const canvas = document.querySelector('canvas')
+
+const canvas = document.querySelector('canvas')
     const c = canvas.getContext('2d')
 
-    canvas.width = innerWidth
-    canvas.height = innerHeight
+    canvas.width = 1024
+    canvas.height = 576
+
 
     const gravity = 0.5
     class Player {
@@ -41,13 +43,15 @@
                 y: y
             }
 
-            this.width = 200
+            this.width = 580
             this.height = 20
         }
 
         draw() {
             c.fillStyle = 'blue'
-            c.fillRect(this.position.x, this.position.y, this.width, this.height)
+            const image = new Image();
+            image.src = "/img/platform.png"
+            c.drawImage(image, this.position.x, this.position.y)
         }
     }
 
@@ -68,7 +72,9 @@
             pressed: false
         }
     }
-    player.draw()  
+    player.draw()
+    
+    let scrollOffset = 0
 
     function animate() {
         requestAnimationFrame(animate)
@@ -86,15 +92,19 @@
             player.velocity.x = 0
 
             if (keys.right.pressed) {
+                scrollOffset += 5
                 platforms.forEach((platform) => {
                     platform.position.x -= 5
                 })
                 } else if (keys.left.pressed) {
+                  scrollOffset -= 5
                 platforms.forEach((platform) => {
                     platform.position.x += 5
                 })
             }
         }
+
+        console.log(scrollOffset)
 
         //platform collision
         platforms.forEach((platform) => { 
@@ -102,6 +112,9 @@
             player.velocity.y = 0
         }
     })
+        if (scrollOffset > 2000) {
+            console.log('Pogchamp')
+        }
     }
 
     animate()
