@@ -1,9 +1,10 @@
 
+
 const canvas = document.querySelector('canvas')
     const c = canvas.getContext('2d')
 
-    canvas.width = 1024
-    canvas.height = 576
+    canvas.width = 928
+    canvas.height = 520
 
 
     const gravity = 0.5
@@ -28,11 +29,18 @@ const canvas = document.querySelector('canvas')
         update() {
             this.draw()
             this.position.y += this.velocity.y
-            this.position.x += this.velocity.x
+            
+
+            if (this.position.x > 1500){
+                console.log ('reached end') 
+            } else {
+                this.position.x += this.velocity.x
+            }
+            
 
             if (this.position.y +this.height +this.velocity.y <= canvas.height)
             this.velocity.y += gravity
-            else this.velocity.y = 0
+            
         }
     }
 
@@ -48,10 +56,27 @@ const canvas = document.querySelector('canvas')
         }
 
         draw() {
-            c.fillStyle = 'blue'
             const image = new Image();
             image.src = "/img/platform.png"
             c.drawImage(image, this.position.x, this.position.y)
+        }
+    }
+
+    class Background {
+        constructor({x, y }) {
+            this.position = {
+                x: x ,
+                y: y
+            }
+
+            this.width = 928
+            this.height = 793
+        }
+
+        draw() {
+            const image = new Image();
+            image.src = "/img/BG.png"
+            c.drawImage(image, this.position.x, this.position.y, 928, 520)
         }
     }
 
@@ -59,10 +84,19 @@ const canvas = document.querySelector('canvas')
 
     const player = new Player()
     const platforms = [new Platform({
-        x: 200, y: 100
+        x:-1, y: 475
     }), new Platform({
-        x:200, y:500
+        x:700, y:475
+    }),new Platform({
+        x: 1400, y:475
     })]
+
+    const BG = [
+        new Background({
+            x: 0,
+            y: 0,
+        })
+    ]
 
     const keys = {
         right:{
@@ -78,15 +112,26 @@ const canvas = document.querySelector('canvas')
 
     function animate() {
         requestAnimationFrame(animate)
-        c.clearRect(0, 0, canvas.width, canvas.height)
+        c.fillStyle = 'white'
+        c.fillRect(0, 0, canvas.width, canvas.height)
+
+        BG.forEach((x) => {
+            x.draw()
+        })
+        
+
         player.update()
         platforms.forEach((platform) => {
             platform.draw()
         })
+   
+        
+          
 
         if(keys.right.pressed && player.position.x < 400) {
             player.velocity.x = 5
-        } else if (keys.left.pressed && player.position.x > 100) {
+        } else if ((keys.left.pressed && player.position.x > 100)
+        || keys.left.pressed && scrollOffset === 0 && player.position.x > 0) {
             player.velocity.x = -5
         } else {
             player.velocity.x = 0
@@ -96,7 +141,7 @@ const canvas = document.querySelector('canvas')
                 platforms.forEach((platform) => {
                     platform.position.x -= 5
                 })
-                } else if (keys.left.pressed) {
+                } else if (keys.left.pressed && scrollOffset > 0) {
                   scrollOffset -= 5
                 platforms.forEach((platform) => {
                     platform.position.x += 5
@@ -112,8 +157,14 @@ const canvas = document.querySelector('canvas')
             player.velocity.y = 0
         }
     })
-        if (scrollOffset > 2000) {
+        //howtowin
+        if (scrollOffset > 1500) {
             console.log('Pogchamp')
+        }
+
+        //death
+        if (player.position.y > canvas.height) {
+            console.log('RIP')
         }
     }
 
