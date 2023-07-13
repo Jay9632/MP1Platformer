@@ -1,4 +1,4 @@
-
+let win = false
 
 const canvas = document.querySelector('canvas')
     const c = canvas.getContext('2d')
@@ -31,8 +31,8 @@ const canvas = document.querySelector('canvas')
             this.position.y += this.velocity.y
             
 
-            if (this.position.x > 1500){
-                console.log ('reached end') 
+            if (scrollOffset > 1500){
+                win = true 
             } else {
                 this.position.x += this.velocity.x
             }
@@ -159,13 +159,19 @@ const canvas = document.querySelector('canvas')
     })
         //howtowin
         if (scrollOffset > 1500) {
-            console.log('Pogchamp')
+            console.log('Win')
         }
 
         //death
         if (player.position.y > canvas.height) {
             console.log('RIP')
         }
+        
+        if (win){
+            c.font = "200px serif"
+            c.fillText('You Win~!', 100, 400)
+        }
+        
     }
 
     animate()
